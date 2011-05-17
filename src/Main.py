@@ -50,26 +50,3 @@ while d <= enddate:
     call(["rm", os.getcwd()+"/"+files[0]])
     time.sleep(2)
     d += delta
-#    
-#print os.getcwd()
-#
-#
-#call(["unzip", "-oq", os.getcwd()+"/*.zip"])
-#files=os.listdir(".")
-#files=[filename for filename in files if filename[-4:] == '.csv']
-#
-#for file in files:
-#    f = open(os.getcwd()+"/"+file, 'r')
-#    x = f.readlines()
-#    f.close()
-#    
-##    call(["rm", "-rf", "/tmp/bhavcopy/"])
-##    os.mkdir('/tmp/bhavcopy/')
-##    os.chdir('/tmp/bhavcopy/')
-#    nfile= d.strftime("%d-%m-%Y") + ".txt"
-#    print nfile
-#    f = open(nfile, 'w')
-#    for x1 in x[1:]:
-#        x1 = x1.split(',')
-#        f.write(x1[0] + "," + d.strftime("%Y%m%d") + "," + x1[2] + "," + x1[3] + "," + x1[4] + "," + x1[5] + "," + x1[8] + "\n")
-#    f.close()
