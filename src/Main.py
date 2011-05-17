@@ -22,31 +22,33 @@ d = startdate
 delta = datetime.timedelta(days=1)
 
 while d <= enddate:
-    date = d.strftime("%d-%m-%Y")
-    res = br.open("http://www.nseindia.com/archives/archives.jsp?date="+date+"&fileType=eqbhav")
-    data = res.read()
-    for link in br.links():
-        rlink = "http://nseindia.com"+link.url
-        urllib.urlretrieve(rlink,date+".zip")
-        print "File fetched!"
-        break
-    call(["unzip", "-oq", os.getcwd()+"/"+date+".zip"])
-    call(["rm", os.getcwd()+"/"+date+".zip"])
+    if(d.isoweekday() in range(1,6)):
+        #Continue only if the day is a weekday!
+        date = d.strftime("%d-%m-%Y")
+        res = br.open("http://www.nseindia.com/archives/archives.jsp?date="+date+"&fileType=eqbhav")
+        data = res.read()
+        for link in br.links():
+            rlink = "http://nseindia.com"+link.url
+            urllib.urlretrieve(rlink,date+".zip")
+            print "File fetched!"
+            break
+        call(["unzip", "-oq", os.getcwd()+"/"+date+".zip"])
+        call(["rm", os.getcwd()+"/"+date+".zip"])
+        
+        files=os.listdir(".")
+        files=[filename for filename in files if filename[-4:] == '.csv']
     
-    files=os.listdir(".")
-    files=[filename for filename in files if filename[-4:] == '.csv']
-
-    f = open(os.getcwd()+"/"+files[0], 'r')
-    x = f.readlines()
-    f.close()
-    
-    nfile= d.strftime("%d-%m-%Y") + ".txt"
-    print nfile
-    f = open(nfile, 'w')
-    for x1 in x[1:]:
-        x1 = x1.split(',')
-        f.write(x1[0] + "," + d.strftime("%Y%m%d") + "," + x1[2] + "," + x1[3] + "," + x1[4] + "," + x1[5] + "," + x1[8] + "\n")
-    f.close()
-    call(["rm", os.getcwd()+"/"+files[0]])
-    time.sleep(2)
+        f = open(os.getcwd()+"/"+files[0], 'r')
+        x = f.readlines()
+        f.close()
+        
+        nfile= d.strftime("%d-%m-%Y") + ".txt"
+        print nfile
+        f = open(nfile, 'w')
+        for x1 in x[1:]:
+            x1 = x1.split(',')
+            f.write(x1[0] + "," + d.strftime("%Y%m%d") + "," + x1[2] + "," + x1[3] + "," + x1[4] + "," + x1[5] + "," + x1[8] + "\n")
+        f.close()
+        call(["rm", os.getcwd()+"/"+files[0]])
+        time.sleep(2)
     d += delta
