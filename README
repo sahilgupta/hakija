@@ -1,0 +1,4 @@
+This is a NSE End of Day Data Downloader written in Python. It also downloads daily index data of a few main NSE indices.
+The downloaded data is in MetaStock format. 
+
+TODO: Create a GUI for this program.
