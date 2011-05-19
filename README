@@ -1,4 +1,4 @@
-This is a NSE End of Day Data Downloader written in Python. It also downloads daily index data of a few main NSE indices.
+This is a NSE End of Day Data Downloader written in Python. It downloads daily EOD (End Of Day) data as well as historical data (past EOD data) for equity stocks and indices. The data is directly downloaded from the NSE servers.
 The downloaded data is in MetaStock format. 
 
 TODO: Create a GUI for this program.
