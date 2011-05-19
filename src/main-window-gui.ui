@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>473</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="startDateLabel">
+            <property name="text">
+             <string>Start Date:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDateEdit" name="startDate"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="endDateLabel">
+            <property name="text">
+             <string>End Date:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDateEdit" name="endDate"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="downloadButton">
+            <property name="text">
+             <string>Download</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="downlaodedLabel">
+            <property name="text">
+             <string>Downloaded:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="progressBar">
+            <property name="value">
+             <number>24</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>473</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>startDate</sender>
+   <signal>dateChanged(QDate)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setStartDate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>203</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>83</x>
+     <y>115</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>startDate</sender>
+   <signal>editingFinished()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setStartDate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>180</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>endDate</sender>
+   <signal>dateChanged(QDate)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setEndDate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>431</x>
+     <y>74</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>442</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>endDate</sender>
+   <signal>editingFinished()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setEndDate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>483</x>
+     <y>79</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>492</x>
+     <y>176</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>downloadButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>startDownload()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>597</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>615</x>
+     <y>115</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>downloadButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>lower()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>582</x>
+     <y>79</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>610</x>
+     <y>163</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>downloadButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>checkDateVaildity()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>556</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>556</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>setStartDate()</slot>
+  <slot>checkDateVaildity()</slot>
+  <slot>setEndDate()</slot>
+  <slot>startDownload()</slot>
+ </slots>
+</ui>
