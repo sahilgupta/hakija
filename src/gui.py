@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main-window-gui.ui'
 #
-# Created: Thu May 19 16:11:47 2011
+# Created: Thu May 19 20:06:21 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -75,7 +75,7 @@ class Ui_MainWindow(object):
         QtCore.QObject.connect(self.endDate, QtCore.SIGNAL(_fromUtf8("editingFinished()")), MainWindow.setEndDate)
         QtCore.QObject.connect(self.downloadButton, QtCore.SIGNAL(_fromUtf8("clicked()")), MainWindow.startDownload)
         QtCore.QObject.connect(self.downloadButton, QtCore.SIGNAL(_fromUtf8("clicked()")), MainWindow.lower)
-        QtCore.QObject.connect(self.downloadButton, QtCore.SIGNAL(_fromUtf8("clicked()")), MainWindow.checkDateVaildity)
+        QtCore.QObject.connect(self.downloadButton, QtCore.SIGNAL(_fromUtf8("clicked()")), MainWindow.checkDateValidity)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

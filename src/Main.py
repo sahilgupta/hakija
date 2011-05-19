@@ -7,8 +7,10 @@
 
 import mechanize,urllib,datetime
 from datetime import date
-import time, re
+import time, re, sys
 from zipfile import ZipFile
+from PyQt4 import QtCore, QtGui
+from gui import Ui_MainWindow
 
 br = mechanize.Browser()
 
@@ -102,3 +104,24 @@ if startdate<=enddate:
 else:
     pass
     #SHOW ERROR! ASKING TO REENTER THE DATES
+
+class BhavCopy(QtGui.QMainWindow):
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        QtCore.QObject.connect(self.ui.pushButton, QtCore.SIGNAL("clicked()"), self.ui.textEdit.clear )
+        QtCore.QObject.connect(self.ui.lineEdit, QtCore.SIGNAL("returnPressed()"), self.add_entry)
+        QtCore.QObject.connect(self.ui.downloadButton, QtCore.SIGNAL("clicked()"), self.startDownload)
+ 
+    def startDownload(self):
+        self.ui.lineEdit.selectAll()
+        self.ui.lineEdit.cut()
+        self.ui.textEdit.append("")
+        self.ui.textEdit.paste()
+        
+if __name__ == "__main__":
+        app = QtGui.QApplication(sys.argv)
+        myapp = BhavCopy()
+        myapp.show()
+        sys.exit(app.exec_())

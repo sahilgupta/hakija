@@ -102,8 +102,8 @@
    <slot>setStartDate()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>203</x>
-     <y>77</y>
+     <x>189</x>
+     <y>72</y>
     </hint>
     <hint type="destinationlabel">
      <x>83</x>
@@ -118,8 +118,8 @@
    <slot>setStartDate()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>180</x>
-     <y>77</y>
+     <x>189</x>
+     <y>72</y>
     </hint>
     <hint type="destinationlabel">
      <x>123</x>
@@ -134,8 +134,8 @@
    <slot>setEndDate()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>431</x>
-     <y>74</y>
+     <x>373</x>
+     <y>72</y>
     </hint>
     <hint type="destinationlabel">
      <x>442</x>
@@ -150,8 +150,8 @@
    <slot>setEndDate()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>483</x>
-     <y>79</y>
+     <x>373</x>
+     <y>72</y>
     </hint>
     <hint type="destinationlabel">
      <x>492</x>
@@ -166,8 +166,8 @@
    <slot>startDownload()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>597</x>
-     <y>76</y>
+     <x>460</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
      <x>615</x>
@@ -182,8 +182,8 @@
    <slot>lower()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>582</x>
-     <y>79</y>
+     <x>460</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
      <x>610</x>
@@ -195,11 +195,11 @@
    <sender>downloadButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>checkDateVaildity()</slot>
+   <slot>checkDateValidity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>556</x>
-     <y>80</y>
+     <x>460</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
      <x>556</x>
@@ -210,7 +210,7 @@
  </connections>
  <slots>
   <slot>setStartDate()</slot>
-  <slot>checkDateVaildity()</slot>
+  <slot>checkDateValidity()</slot>
   <slot>setEndDate()</slot>
   <slot>startDownload()</slot>
  </slots>
