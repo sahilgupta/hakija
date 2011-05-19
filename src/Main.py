@@ -4,33 +4,35 @@
 #TODO: Individual Time out for different Index data downloads
 #TODO: VIX URL still UNKOWN
 #TODO: Delete the files from the temp directory
-
-import mechanize,urllib,datetime
-from datetime import date
-import time, re, sys
-from zipfile import ZipFile
+#TODO: Multithread GUI and Downloader so that GUI doesn't hang while data is being downloaded.
+#TODO: attach reporthook to progressbar
+#TODO: attach display label to print commands
 from PyQt4 import QtCore, QtGui
-from gui import Ui_MainWindow
+from gui import  Ui_Bhavcopy
+import sys
 
-br = mechanize.Browser()
-
-# Browser options
-br.set_handle_equiv(True)
-br.set_handle_referer(True)
-br.set_handle_robots(False)
-# Follows refresh 0 but not hangs on refresh > 0
-br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
-#Emulate a Mozilla Firefox 4.0 Browser to avoid the 403 Permission Denied Error
-br.addheaders = [('Host','www.nseindia.com'),('User-Agent',' Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0'),('Accept','text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),('Accept-Language',' en-us,en;q=0.5'),('Accept-Charset',' ISO-8859-1,utf-8;q=0.7,*;q=0.7'),('Keep-Alive','115'),('Connection',' keep-alive')]
-
-startdate=date(2011,05,03)
-enddate=date(2011,05,07)
-
-#Startdate must not be greater than the end date 
-if startdate<=enddate:
-    d = startdate
-    delta = datetime.timedelta(days=1)
+def download(startdate, enddate):
+    from datetime import date,datetime
+    import mechanize,urllib
+    import time, re
+    from zipfile import ZipFile
     
+    br = mechanize.Browser()
+    # Browser options
+    br.set_handle_equiv(True)
+    br.set_handle_referer(True)
+    br.set_handle_robots(False)
+    # Follows refresh 0 but not hangs on refresh > 0
+    br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
+    #Emulate a Mozilla Firefox 4.0 Browser to avoid the 403 Permission Denied Error
+    br.addheaders = [('Host','www.nseindia.com'),('User-Agent',' Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0'),('Accept','text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),('Accept-Language',' en-us,en;q=0.5'),('Accept-Charset',' ISO-8859-1,utf-8;q=0.7,*;q=0.7'),('Keep-Alive','115'),('Connection',' keep-alive')]
+    
+    startdate = datetime.datetime.strptime(startdate, '%d-%m-%Y').date()
+    enddate = datetime.datetime.strptime(enddate, '%d-%m-%Y').date()
+    
+    d = startdate
+    
+    delta = datetime.timedelta(days=1)
     while d <= enddate:
             flag=0
             date = d.strftime("%d-%m-%Y")
@@ -99,29 +101,36 @@ if startdate<=enddate:
                         f.write(index + "," + d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "," + a[5] + "\r\n")
                     
                 f.close()
+                print "File successfully downloaded."
             time.sleep(2)
             d += delta
-else:
-    pass
-    #SHOW ERROR! ASKING TO REENTER THE DATES
+    print "DOWNLOAD COMPLETE!"
 
 class BhavCopy(QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
-        self.ui = Ui_MainWindow()
+        self.ui = Ui_Bhavcopy()
         self.ui.setupUi(self)
-        QtCore.QObject.connect(self.ui.pushButton, QtCore.SIGNAL("clicked()"), self.ui.textEdit.clear )
-        QtCore.QObject.connect(self.ui.lineEdit, QtCore.SIGNAL("returnPressed()"), self.add_entry)
-        QtCore.QObject.connect(self.ui.downloadButton, QtCore.SIGNAL("clicked()"), self.startDownload)
- 
-    def startDownload(self):
-        self.ui.lineEdit.selectAll()
-        self.ui.lineEdit.cut()
-        self.ui.textEdit.append("")
-        self.ui.textEdit.paste()
+        self.ui.endDate.setDate(QtCore.QDateTime.currentDateTime().date())
+        self.ui.startDate.setDate(QtCore.QDateTime.currentDateTime().date())
+        self.ui.endDate.setMaximumDate(QtCore.QDateTime.currentDateTime().date())
+        self.ui.startDate.setMaximumDate(QtCore.QDateTime.currentDateTime().date())
+        
+        QtCore.QObject.connect(self.ui.downloadButton, QtCore.SIGNAL("clicked()"), self.downloadButtonclicked)
+
+    def downloadButtonclicked(self):
+        print "sexy!"
+        #Startdate must not be greater than the end date 
+        
+        self.ui.downloadButton.setDisabled(True)
+        self.ui.startDate.setDisabled(True)
+        self.ui.endDate.setDisabled(True)
+        startdate = str(self.ui.startDate.date().toString("dd-MM-yyyy"))
+        enddate = str(self.ui.endDate.date().toString("dd-MM-yyyy"))
+        download(startdate, enddate)
         
 if __name__ == "__main__":
         app = QtGui.QApplication(sys.argv)
-        myapp = BhavCopy()
-        myapp.show()
+        window = BhavCopy()
+        window.show()
         sys.exit(app.exec_())

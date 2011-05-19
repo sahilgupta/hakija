@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>Bhavcopy</class>
+ <widget class="QMainWindow" name="Bhavcopy">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -10,8 +10,20 @@
     <height>300</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>NSE Data Downloader</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
+  <property name="animated">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -24,27 +36,53 @@
           <item>
            <widget class="QLabel" name="startDateLabel">
             <property name="text">
-             <string>Start Date:</string>
+             <string>  Start Date:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QDateEdit" name="startDate"/>
+           <widget class="QDateTimeEdit" name="startDate">
+            <property name="displayFormat">
+             <string>dd/MM/yy</string>
+            </property>
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLabel" name="endDateLabel">
             <property name="text">
-             <string>End Date:</string>
+             <string>    End Date:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QDateEdit" name="endDate"/>
+           <widget class="QDateTimeEdit" name="endDate">
+            <property name="accelerated">
+             <bool>false</bool>
+            </property>
+            <property name="displayFormat">
+             <string>dd/MM/yy</string>
+            </property>
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="downloadButton">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Download</string>
+            </property>
+            <property name="autoDefault">
+             <bool>true</bool>
+            </property>
+            <property name="default">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -72,6 +110,9 @@
       </item>
       <item>
        <widget class="QLabel" name="label">
+        <property name="autoFillBackground">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -94,120 +135,7 @@
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>startDate</sender>
-   <signal>dateChanged(QDate)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setStartDate()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>189</x>
-     <y>72</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>83</x>
-     <y>115</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>startDate</sender>
-   <signal>editingFinished()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setStartDate()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>189</x>
-     <y>72</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>123</x>
-     <y>118</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>endDate</sender>
-   <signal>dateChanged(QDate)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setEndDate()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>373</x>
-     <y>72</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>442</x>
-     <y>128</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>endDate</sender>
-   <signal>editingFinished()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setEndDate()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>373</x>
-     <y>72</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>492</x>
-     <y>176</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>downloadButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>startDownload()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>460</x>
-     <y>73</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>615</x>
-     <y>115</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>downloadButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>lower()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>460</x>
-     <y>73</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>610</x>
-     <y>163</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>downloadButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>checkDateValidity()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>460</x>
-     <y>73</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>556</x>
-     <y>116</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>setStartDate()</slot>
   <slot>checkDateValidity()</slot>
