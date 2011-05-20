@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main-window-gui.ui'
 #
-# Created: Fri May 20 01:55:41 2011
+# Created: Fri May 20 02:19:21 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -68,10 +68,10 @@ class Ui_Bhavcopy(object):
         self.horizontalLayout_2.addWidget(self.progressBar)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.verticalLayout_2.addLayout(self.verticalLayout)
-        self.label = QtGui.QLabel(self.centralwidget)
-        self.label.setAutoFillBackground(True)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.verticalLayout_2.addWidget(self.label)
+        self.progressUpdate = QtGui.QLabel(self.centralwidget)
+        self.progressUpdate.setAutoFillBackground(True)
+        self.progressUpdate.setObjectName(_fromUtf8("progressUpdate"))
+        self.verticalLayout_2.addWidget(self.progressUpdate)
         self.gridLayout.addLayout(self.verticalLayout_2, 0, 0, 1, 1)
         Bhavcopy.setCentralWidget(self.centralwidget)
         self.statusbar = QtGui.QStatusBar(Bhavcopy)
@@ -93,7 +93,7 @@ class Ui_Bhavcopy(object):
         self.endDate.setDisplayFormat(QtGui.QApplication.translate("Bhavcopy", "dd/MM/yy", None, QtGui.QApplication.UnicodeUTF8))
         self.downloadButton.setText(QtGui.QApplication.translate("Bhavcopy", "Download", None, QtGui.QApplication.UnicodeUTF8))
         self.downlaodedLabel.setText(QtGui.QApplication.translate("Bhavcopy", "Downloaded:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("Bhavcopy", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
+        self.progressUpdate.setText(QtGui.QApplication.translate("Bhavcopy", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
 
 
 if __name__ == "__main__":
