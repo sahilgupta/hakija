@@ -67,17 +67,16 @@ class PonderousTask(QtCore.QThread):
         self.stopping = False
         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "-------Starting the data download-------")
         self.stopping = False
-        import mechanize,urllib,datetime
+        from mechanize import Browser
+        import urllib,datetime
         import time, re
         from zipfile import ZipFile
         
-        br = mechanize.Browser()
+        br = Browser()
         # Browser options
         br.set_handle_equiv(True)
         br.set_handle_referer(True)
         br.set_handle_robots(False)
-        # Follows refresh 0 but not hangs on refresh > 0
-        br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
         #Emulate a Mozilla Firefox 4.0 Browser to avoid the 403 Permission Denied Error
         br.addheaders = [('Host','www.nseindia.com'),('User-Agent',' Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0'),('Accept','text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),('Accept-Language',' en-us,en;q=0.5'),('Accept-Charset',' ISO-8859-1,utf-8;q=0.7,*;q=0.7'),('Keep-Alive','115'),('Connection',' keep-alive')]
         
