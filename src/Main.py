@@ -7,7 +7,12 @@
 
 from PyQt4 import QtCore, QtGui
 from gui import  Ui_Bhavcopy
-import sys
+
+import time, re
+import sys, urllib, datetime
+from mechanize import Browser
+from zipfile import ZipFile
+
 
 class BhavCopy(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -24,8 +29,7 @@ class BhavCopy(QtGui.QMainWindow):
         # Create thread object and connect its signals to methods on this object
         self.ponderous = PonderousTask()
         self.connect(self.ponderous, QtCore.SIGNAL("updategui(PyQt_PyObject)"), self.appendUpdates)
-
-        self.ui.scrollArea.ensureVisible (500,320)
+        
         QtCore.QObject.connect(self.ui.downloadButton, QtCore.SIGNAL("clicked()"), self.startDownload)
         QtCore.QObject.connect(self.ui.cancelButton, QtCore.SIGNAL("clicked()"), self.cancelDownload)
     
@@ -33,7 +37,8 @@ class BhavCopy(QtGui.QMainWindow):
     def appendUpdates(self, update):
         print "informed of update: ", update
         self.ui.progressUpdate.setText(self.ui.progressUpdate.text()+update+"\n")
-    
+        self.ui.scrollArea.verticalScrollBar().setValue(self.ui.scrollArea.verticalScrollBar().maximum())
+
     def cancelDownload(self):
         self.ponderous.stopTask()
         self.ui.downloadButton.setEnabled(True)
@@ -67,17 +72,12 @@ class PonderousTask(QtCore.QThread):
         self.stopping = False
         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "-------Starting the data download-------")
         self.stopping = False
-        import mechanize,urllib,datetime
-        import time, re
-        from zipfile import ZipFile
         
-        br = mechanize.Browser()
+        br = Browser()
         # Browser options
         br.set_handle_equiv(True)
         br.set_handle_referer(True)
         br.set_handle_robots(False)
-        # Follows refresh 0 but not hangs on refresh > 0
-        br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
         #Emulate a Mozilla Firefox 4.0 Browser to avoid the 403 Permission Denied Error
         br.addheaders = [('Host','www.nseindia.com'),('User-Agent',' Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0'),('Accept','text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),('Accept-Language',' en-us,en;q=0.5'),('Accept-Charset',' ISO-8859-1,utf-8;q=0.7,*;q=0.7'),('Keep-Alive','115'),('Connection',' keep-alive')]
         
