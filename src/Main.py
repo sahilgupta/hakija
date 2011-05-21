@@ -145,6 +145,9 @@ class PonderousTask(QtCore.QThread):
                         urls['NSEIT'] = 'http://nseindia.com/content/indices/histdata/CNX%20ITdate-date.csv'
         
                         for index in indexList:
+#                             Check whether we've been cancelled or not
+                            if self.stopping:
+                                break
                             newurl = re.sub('date',date,urls[index])
                             self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Downloading "+index+ " index data...")
                             urlpointer = urllib.urlretrieve(newurl,None)#,reporthook)
@@ -164,7 +167,7 @@ class PonderousTask(QtCore.QThread):
                            
                 time.sleep(2)
                 d += delta
-        print "All downloading finished! I AM HERE!!!"
+        print "--------Download Complete--------"
    
     def stopTask(self):
         self.stopping = True

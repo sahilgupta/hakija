@@ -38,102 +38,114 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <widget class="QScrollArea" name="scrollArea">
+    <property name="geometry">
+     <rect>
+      <x>19</x>
+      <y>49</y>
+      <width>521</width>
+      <height>250</height>
+     </rect>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>517</width>
+       <height>246</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="progressUpdate">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
    <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>17</x>
-      <y>13</y>
-      <width>526</width>
-      <height>51</height>
+      <x>19</x>
+      <y>15</y>
+      <width>524</width>
+      <height>28</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetMinimumSize</enum>
-     </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="startDateLabel">
-         <property name="text">
-          <string>  Start Date:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QDateTimeEdit" name="startDate">
-         <property name="displayFormat">
-          <string>dd/MM/yy</string>
-         </property>
-         <property name="calendarPopup">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="endDateLabel">
-         <property name="text">
-          <string>    End Date:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QDateTimeEdit" name="endDate">
-         <property name="accelerated">
-          <bool>false</bool>
-         </property>
-         <property name="displayFormat">
-          <string>dd/MM/yy</string>
-         </property>
-         <property name="calendarPopup">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="downloadButton">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Download</string>
-         </property>
-         <property name="autoDefault">
-          <bool>true</bool>
-         </property>
-         <property name="default">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="cancelButton">
-         <property name="text">
-          <string>Cancel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QLabel" name="startDateLabel">
+       <property name="text">
+        <string>  Start Date:</string>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QLabel" name="progressUpdate">
+      <widget class="QDateTimeEdit" name="startDate">
+       <property name="displayFormat">
+        <string>dd/MM/yy</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="endDateLabel">
+       <property name="text">
+        <string>    End Date:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDateTimeEdit" name="endDate">
+       <property name="accelerated">
+        <bool>false</bool>
+       </property>
+       <property name="displayFormat">
+        <string>dd/MM/yy</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="downloadButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 255, 255);</string>
-       </property>
        <property name="text">
-        <string>TextLabel</string>
+        <string>Download</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="text">
+        <string>Cancel</string>
        </property>
       </widget>
      </item>
