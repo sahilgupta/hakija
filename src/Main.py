@@ -7,7 +7,12 @@
 
 from PyQt4 import QtCore, QtGui
 from gui import  Ui_Bhavcopy
-import sys
+
+import time, re
+import sys, urllib, datetime
+from mechanize import Browser
+from zipfile import ZipFile
+
 
 class BhavCopy(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -24,8 +29,7 @@ class BhavCopy(QtGui.QMainWindow):
         # Create thread object and connect its signals to methods on this object
         self.ponderous = PonderousTask()
         self.connect(self.ponderous, QtCore.SIGNAL("updategui(PyQt_PyObject)"), self.appendUpdates)
-
-        self.ui.scrollArea.ensureVisible (500,320)
+        
         QtCore.QObject.connect(self.ui.downloadButton, QtCore.SIGNAL("clicked()"), self.startDownload)
         QtCore.QObject.connect(self.ui.cancelButton, QtCore.SIGNAL("clicked()"), self.cancelDownload)
     
@@ -33,7 +37,8 @@ class BhavCopy(QtGui.QMainWindow):
     def appendUpdates(self, update):
         print "informed of update: ", update
         self.ui.progressUpdate.setText(self.ui.progressUpdate.text()+update+"\n")
-    
+        self.ui.scrollArea.verticalScrollBar().setValue(self.ui.scrollArea.verticalScrollBar().maximum())
+
     def cancelDownload(self):
         self.ponderous.stopTask()
         self.ui.downloadButton.setEnabled(True)
@@ -67,10 +72,6 @@ class PonderousTask(QtCore.QThread):
         self.stopping = False
         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "-------Starting the data download-------")
         self.stopping = False
-        from mechanize import Browser
-        import urllib,datetime
-        import time, re
-        from zipfile import ZipFile
         
         br = Browser()
         # Browser options
