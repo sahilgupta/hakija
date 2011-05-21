@@ -29,24 +29,17 @@ class BhavCopy(QtGui.QMainWindow):
         # Create thread object and connect its signals to methods on this object
         self.ponderous = PonderousTask()
         self.connect(self.ponderous, QtCore.SIGNAL("updategui(PyQt_PyObject)"), self.appendUpdates)
+        self.connect(self.ponderous, QtCore.SIGNAL("finished()"), self.downloadComplete)
         
         QtCore.QObject.connect(self.ui.downloadButton, QtCore.SIGNAL("clicked()"), self.startDownload)
         QtCore.QObject.connect(self.ui.cancelButton, QtCore.SIGNAL("clicked()"), self.cancelDownload)
-    
+        
         # Method called asynchronously by other thread when progress should be updated
     def appendUpdates(self, update):
         print "informed of update: ", update
         self.ui.progressUpdate.setText(self.ui.progressUpdate.text()+update+"\n")
         self.ui.scrollArea.verticalScrollBar().setValue(self.ui.scrollArea.verticalScrollBar().maximum())
 
-    def cancelDownload(self):
-        self.ponderous.stopTask()
-        self.ui.downloadButton.setEnabled(True)
-        self.ui.cancelButton.setDisabled(True)
-        self.ui.startDate.setEnabled(True)
-        self.ui.endDate.setEnabled(True)
-        
-    
     def startDownload(self):
         self.ui.downloadButton.setDisabled(True)
         self.ui.cancelButton.setEnabled(True)
@@ -55,7 +48,19 @@ class BhavCopy(QtGui.QMainWindow):
         startdate = str(self.ui.startDate.date().toString("dd-MM-yyyy"))
         enddate = str(self.ui.endDate.date().toString("dd-MM-yyyy"))
         self.ponderous.goNow(startdate, enddate)
+
+    def cancelDownload(self):
+        self.ponderous.stopTask()
+        self.ui.downloadButton.setEnabled(True)
+        self.ui.cancelButton.setDisabled(True)
+        self.ui.startDate.setEnabled(True)
+        self.ui.endDate.setEnabled(True)
         
+    def downloadComplete(self):
+        self.ui.downloadButton.setEnabled(True)
+        self.ui.cancelButton.setDisabled(True)
+        self.ui.startDate.setEnabled(True)
+        self.ui.endDate.setEnabled(True)
 
 class PonderousTask(QtCore.QThread):
     def __init__(self, parent = None):
@@ -90,12 +95,12 @@ class PonderousTask(QtCore.QThread):
                 flag=0
                 date = d.strftime("%d-%m-%Y")
                 self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "-------"+date+"-------")
-                self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Downloading bhavcopy...")
                 res = br.open("http://www.nseindia.com/archives/archives.jsp?date="+date+"&fileType=eqbhav")
                 
                 #If EOD data for the given date exists, download the file by following the first link
                 for link in br.links():
                     rlink = "http://nseindia.com"+link.url
+                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Downloading bhavcopy...")
                     urldata = urllib.urlretrieve(rlink,None)#,reporthook)
                     #Flag to mark successfull download of file.
                     flag=1
@@ -157,11 +162,13 @@ class PonderousTask(QtCore.QThread):
                         
                     f.close()
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "File successfully written.\n\n")
-                           
+                else:
+                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "No Data Found!.\n\n")
                 time.sleep(0.5)
                 d += delta
-        print "--------Download Complete--------"
-   
+        self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "--------Download Complete--------")
+        self.emit(QtCore.SIGNAL("finished()"))
+        
     def stopTask(self):
         self.stopping = True
 
