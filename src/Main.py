@@ -4,12 +4,8 @@
 #TODO: Individual Time out for different Index data downloads
 #TODO: VIX URL still UNKOWN
 #TODO: Delete the files from the temp directory
-#TODO: Multithread GUI and Downloader so that GUI doesn't hang while data is being downloaded.
-#TODO: attach reporthook to progressbar
-#TODO: attach display label to print commands
+
 from PyQt4 import QtCore, QtGui
-#from QtCore import *
-#from QtGui import *
 from gui import  Ui_Bhavcopy
 import sys
 
@@ -23,25 +19,32 @@ class BhavCopy(QtGui.QMainWindow):
         self.ui.startDate.setDate(QtCore.QDateTime.currentDateTime().date())
         self.ui.endDate.setMaximumDate(QtCore.QDateTime.currentDateTime().date())
         self.ui.startDate.setMaximumDate(QtCore.QDateTime.currentDateTime().date())
-        
-        QtCore.QObject.connect(self.ui.downloadButton, QtCore.SIGNAL("clicked()"), self.startDownload)
+        self.ui.cancelButton.setDisabled(True)
+
         # Create thread object and connect its signals to methods on this object
         self.ponderous = PonderousTask()
         self.connect(self.ponderous, QtCore.SIGNAL("updategui(PyQt_PyObject)"), self.appendUpdates)
-#        self.connect(self.ponderous, QtCore.SIGNAL("finished()"), self.informOfFinished)
-        # Method called asynchronously by other thread when progress should be updated
+
+        self.ui.scrollArea.ensureVisible (500,320)
+        QtCore.QObject.connect(self.ui.downloadButton, QtCore.SIGNAL("clicked()"), self.startDownload)
+        QtCore.QObject.connect(self.ui.cancelButton, QtCore.SIGNAL("clicked()"), self.cancelDownload)
     
+        # Method called asynchronously by other thread when progress should be updated
     def appendUpdates(self, update):
         print "informed of update: ", update
         self.ui.progressUpdate.setText(self.ui.progressUpdate.text()+update+"\n")
-#            if not self.progDialog.wasCanceled():
-#                self.progDialog.setValue(inProgress)
+    
+    def cancelDownload(self):
+        self.ponderous.stopTask()
+        self.ui.downloadButton.setEnabled(True)
+        self.ui.cancelButton.setDisabled(True)
+        self.ui.startDate.setEnabled(True)
+        self.ui.endDate.setEnabled(True)
+        
     
     def startDownload(self):
-        print "sexy!"
-        #Startdate must not be greater than the end date 
-        
         self.ui.downloadButton.setDisabled(True)
+        self.ui.cancelButton.setEnabled(True)
         self.ui.startDate.setDisabled(True)
         self.ui.endDate.setDisabled(True)
         startdate = str(self.ui.startDate.date().toString("dd-MM-yyyy"))
@@ -52,27 +55,18 @@ class BhavCopy(QtGui.QMainWindow):
 class PonderousTask(QtCore.QThread):
     def __init__(self, parent = None):
         QtCore.QThread.__init__(self, parent)
+ 
     # Call this to launch the thread
     def goNow(self,startDate,endDate):
-        print "go now"
         self.startdate = startDate
         self.enddate = endDate
         self.start()
 
     # This run method is called by Qt as a result of calling start()
     def run(self):
-        print "Starting the data download"
         self.stopping = False
-#        download(self.startdate, self.enddate)
-#        for t in range(10):
-#            l = 0
-#            for j in range(self.numLoops):
-#                l = l + 1
-#            # Check whether we've been cancelled or not
-#            if self.stopping:
-#                break
-#            # Don't interact directly with main thread, just emit signal
-#    def download(startdate, enddate):
+        self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "-------Starting the data download-------")
+        self.stopping = False
         import mechanize,urllib,datetime
         import time, re
         from zipfile import ZipFile
@@ -95,22 +89,21 @@ class PonderousTask(QtCore.QThread):
         while d <= enddate:
                 flag=0
                 date = d.strftime("%d-%m-%Y")
+                self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "-------"+date+"-------")
+                self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Downloading bhavcopy...")
                 res = br.open("http://www.nseindia.com/archives/archives.jsp?date="+date+"&fileType=eqbhav")
-                def reporthook(a,b,c):
-                    """Download progress bar!"""
-                    print "% 3.1f%% of %d bytes\r" % (min(100, float(a * b) / c * 100), c),
-        #            sys.stdout.flush()
                 
                 #If EOD data for the given date exists, download the file by following the first link
                 for link in br.links():
                     rlink = "http://nseindia.com"+link.url
-                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Fetching bhavcopy...")
-                    urldata = urllib.urlretrieve(rlink,None,reporthook)
+                    urldata = urllib.urlretrieve(rlink,None)#,reporthook)
                     #Flag to mark successfull download of file.
                     flag=1
+                    if(self.stopping):
+                        return
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Bhavcopy succesfully fetched!")
                     break
-                
+                     
                 if(flag):
                     file = ZipFile(urldata[0], "r")
                     data  = file.read(file.namelist()[0])
@@ -131,7 +124,6 @@ class PonderousTask(QtCore.QThread):
                                 t=stcksymb
                                 f.write(x1[0] + "," + d.strftime("%Y%m%d") + "," + x1[2] + "," + x1[3] + "," + x1[4] + "," + x1[5] + "," + x1[8] + "\r\n")
                         
-                        
                         indexList = ['NSENIFTY','NIFTYJUNIOR','BANKNIFTY','NSEMIDCAP','NSEIT','NSE100','NSE500','MIDCAP50']#,'NSEDEFTY','VIX']
                         #Create a dictionary mapping index to the index data URL
                         urls = {}
@@ -147,10 +139,11 @@ class PonderousTask(QtCore.QThread):
                         for index in indexList:
 #                             Check whether we've been cancelled or not
                             if self.stopping:
-                                break
+                                return
                             newurl = re.sub('date',date,urls[index])
                             self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Downloading "+index+ " index data...")
                             urlpointer = urllib.urlretrieve(newurl,None)#,reporthook)
+                            
                             #Read the downloaded csv file 
                             f2 = open(urlpointer[0],'r')
                             data = f2.readlines()
@@ -163,9 +156,9 @@ class PonderousTask(QtCore.QThread):
                             f.write(index + "," + d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "," + a[5] + "\r\n")
                         
                     f.close()
-                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "File successfully downloaded.")
+                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "File successfully written.\n\n")
                            
-                time.sleep(2)
+                time.sleep(0.5)
                 d += delta
         print "--------Download Complete--------"
    
