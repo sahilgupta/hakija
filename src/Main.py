@@ -3,7 +3,6 @@
 #TODO: Handle no internet connection with a timeout
 #TODO: Individual Time out for different Index data downloads
 #TODO: VIX URL still UNKOWN
-#TODO: Delete the files from the temp directory
 
 from PyQt4 import QtCore, QtGui
 from gui import  Ui_Bhavcopy
@@ -102,6 +101,7 @@ class PonderousTask(QtCore.QThread):
                     rlink = "http://nseindia.com"+link.url
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Downloading bhavcopy...")
                     urldata = urllib.urlretrieve(rlink,None)#,reporthook)
+                    
                     #Flag to mark successfull download of file.
                     flag=1
                     if(self.stopping):
@@ -113,6 +113,9 @@ class PonderousTask(QtCore.QThread):
                     file = ZipFile(urldata[0], "r")
                     data  = file.read(file.namelist()[0])
                     file.close()
+                    #delete the temp file created
+                    urllib.urlcleanup()
+
                     x = data.split('\n')
                     
                     nfile= d.strftime("%d-%m-%Y") + ".txt"
@@ -142,7 +145,7 @@ class PonderousTask(QtCore.QThread):
                         urls['NSEIT'] = 'http://nseindia.com/content/indices/histdata/CNX%20ITdate-date.csv'
         
                         for index in indexList:
-#                             Check whether we've been cancelled or not
+                            #Check whether we've been cancelled or not
                             if self.stopping:
                                 return
                             newurl = re.sub('date',date,urls[index])
@@ -153,13 +156,15 @@ class PonderousTask(QtCore.QThread):
                             f2 = open(urlpointer[0],'r')
                             data = f2.readlines()
                             f2.close()
+                            #delete the temp file created
+                            urllib.urlcleanup()
                             
                             abc = re.sub("\"",'',data[1]).split(',')
                             a = []  
                             for i in abc[1:]:
                                 a.append(i.strip())
                             f.write(index + "," + d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "," + a[5] + "\r\n")
-                        
+
                     f.close()
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "File successfully written.\n\n")
                 else:
