@@ -6,12 +6,13 @@
 
 from PyQt4 import QtCore, QtGui
 from gui import  Ui_Bhavcopy
-
+import socket
 import time, re
 import sys, urllib, datetime
 from mechanize import Browser
 from zipfile import ZipFile
 
+socket.setdefaultimeout(10)
 
 class BhavCopy(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -130,8 +131,11 @@ class PonderousTask(QtCore.QThread):
                                 pass
                             else:
                                 t=stcksymb
-                                f.write(x1[0] + "," + d.strftime("%Y%m%d") + "," + x1[2] + "," + x1[3] + "," + x1[4] + "," + x1[5] + "," + x1[8] + "\r\n")
-                        
+                                try:
+                                    f.write(x1[0] + "," + d.strftime("%Y%m%d") + "," + x1[2] + "," + x1[3] + "," + x1[4] + "," + x1[5] + "," + x1[8] + "\r\n")
+                                except:
+                                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Error in downloading Bhavcopy.Kindly retry later.")
+
                         indexList = ['NSENIFTY','NIFTYJUNIOR','BANKNIFTY','NSEMIDCAP','NSEIT','NSE100','NSE500','MIDCAP50']#,'NSEDEFTY','VIX']
                         #Create a dictionary mapping index to the index data URL
                         urls = {}
@@ -163,8 +167,10 @@ class PonderousTask(QtCore.QThread):
                             a = []  
                             for i in abc[1:]:
                                 a.append(i.strip())
-                            f.write(index + "," + d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "," + a[5] + "\r\n")
-
+                            try:
+                                f.write(index + "," + d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "," + a[5] + "\r\n")
+                            except:
+                                self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Error in downloading "+index+ " index data.Kindly retry later.")
                     f.close()
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "File successfully written.\n\n")
                 else:
