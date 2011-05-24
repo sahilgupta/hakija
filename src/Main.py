@@ -6,20 +6,10 @@
 
 from PyQt4 import QtCore, QtGui
 from gui import  Ui_Bhavcopy
-<<<<<<< HEAD
-
-=======
-import socket
->>>>>>> timeout
 import time, re
 import sys, urllib, datetime
 from mechanize import Browser
 from zipfile import ZipFile
-
-<<<<<<< HEAD
-=======
-socket.setdefaultimeout(10)
->>>>>>> timeout
 
 class BhavCopy(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -174,15 +164,10 @@ class PonderousTask(QtCore.QThread):
                             a = []  
                             for i in abc[1:]:
                                 a.append(i.strip())
-<<<<<<< HEAD
-                            f.write(index + "," + d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "," + a[5] + "\r\n")
-
-=======
                             try:
                                 f.write(index + "," + d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "," + a[5] + "\r\n")
                             except:
                                 self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Error in downloading "+index+ " index data.Kindly retry later.")
->>>>>>> timeout
                     f.close()
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "File successfully written.\n\n")
                 else:
