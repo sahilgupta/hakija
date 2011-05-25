@@ -10,7 +10,7 @@ import sys, urllib, datetime
 from mechanize import Browser
 from zipfile import ZipFile
 
-socket.setdefaulttimeout(60)
+socket.setdefaulttimeout(50)
 
 class BhavCopy(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -34,7 +34,7 @@ class BhavCopy(QtGui.QMainWindow):
         
         # Method called asynchronously by other thread when progress should be updated
     def appendUpdates(self, update):
-        print "informed of update: ", update
+        print update
         self.ui.progressUpdate.setText(self.ui.progressUpdate.text()+update+"\n")
         self.ui.scrollArea.verticalScrollBar().setValue(self.ui.scrollArea.verticalScrollBar().maximum())
 
@@ -94,18 +94,17 @@ class PonderousTask(QtCore.QThread):
                 date = d.strftime("%d-%m-%Y")
                 self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "-------"+date+"-------")
                 res = br.open("http://www.nseindia.com/archives/archives.jsp?date="+date+"&fileType=eqbhav")
-                
                 #If EOD data for the given date exists, download the file by following the first link
                 for link in br.links():
                     rlink = "http://nseindia.com"+link.url
-                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Downloading bhavcopy...")
+                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Downloading bhavcopy...")
                     urldata = urllib.urlretrieve(rlink,None)#,reporthook)
                     
                     #Flag to mark successfull download of file.
                     flag=1
                     if(self.stopping):
                         return
-                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Bhavcopy succesfully fetched!")
+                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Bhavcopy succesfully fetched!")
                     break
                      
                 if(flag):
@@ -120,18 +119,14 @@ class PonderousTask(QtCore.QThread):
                     nfile= d.strftime("%d-%m-%Y") + ".txt"
                     
                     with open(nfile, 'w') as f:
-                        t='junk'
                         for x1 in x[1:-1]:
                             x1 = x1.split(',')
-                            stcksymb = x1[0]
-                            if(stcksymb==t):
-                                pass
-                            else:
-                                t=stcksymb
+                            #Extract and write only the EQ series data in the file
+                            if(x1[1]=='EQ'):
                                 try:
                                     f.write(x1[0] + "," + d.strftime("%Y%m%d") + "," + x1[2] + "," + x1[3] + "," + x1[4] + "," + x1[5] + "," + x1[8] + "\r\n")
                                 except:
-                                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Error in downloading Bhavcopy.Kindly retry later.")
+                                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Error in downloading Bhavcopy.Kindly retry later.")
 
                         indexList = ['NSENIFTY','NIFTYJUNIOR','BANKNIFTY','NSEMIDCAP','NSEIT','NSE100','NSE500','MIDCAP50','VIX']#,'NSEDEFTY',]
                         #Create a dictionary mapping index to the index data URL
@@ -150,21 +145,27 @@ class PonderousTask(QtCore.QThread):
                             if self.stopping:
                                 return
                             newurl = re.sub('date',date,urls[index])
-                            self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Downloading "+index+ " index data...")
-                            res = br.open(newurl)
-                            data = res.read()
-                            abc = re.sub("\"",'',data).split(',')
-                            a = []  
-                            for i in abc[1:]:
-                                a.append(i.strip())
+                            self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Downloading "+index+ " index data...")
                             try:
-                                f.write(index + "," + d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "," + a[5] + "\r\n")
+                                res = br.open(newurl)
                             except:
-                                self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Error in downloading "+index+ " index data.Kindly retry later.")
+                                self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Error in downloading "+index+ " index data.Kindly retry later.")
+                            else:
+                                data = res.read()
+                                abc = re.sub("\"",'',data).split(',')
+                                a = []  
+                                for i in abc[1:]:
+                                    a.append(i.strip())
+                                try:
+                                    f.write(index + "," + d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "," + a[5] + "\r\n")
+                                except IOError:
+                                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Error in downloading "+index+ " index data.Kindly retry later.")
+                            time.sleep(0.5)
+
                     f.close()
-                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "File successfully written.\n\n")
+                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: File successfully written.\n\n")
                 else:
-                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "No Data Found!.\n\n")
+                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: No Data Found!.\n\n")
                 time.sleep(0.5)
                 d += delta
         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "--------Download Complete--------")
