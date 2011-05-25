@@ -2,7 +2,6 @@
 #TODO: Handle incomplete file written on the disk due to abrupt program exit.
 #TODO: Handle no internet connection with a timeout
 #TODO: Individual Time out for different Index data downloads
-#TODO: VIX URL still UNKOWN
 
 from PyQt4 import QtCore, QtGui
 from gui import  Ui_Bhavcopy
@@ -12,7 +11,7 @@ import sys, urllib, datetime
 from mechanize import Browser
 from zipfile import ZipFile
 
-socket.setdefaultimeout(10)
+socket.setdefaulttimeout(60)
 
 class BhavCopy(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -120,7 +119,6 @@ class PonderousTask(QtCore.QThread):
                     x = data.split('\n')
                     
                     nfile= d.strftime("%d-%m-%Y") + ".txt"
-                    print nfile
                     
                     with open(nfile, 'w') as f:
                         t='junk'
@@ -136,34 +134,27 @@ class PonderousTask(QtCore.QThread):
                                 except:
                                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Error in downloading Bhavcopy.Kindly retry later.")
 
-                        indexList = ['NSENIFTY','NIFTYJUNIOR','BANKNIFTY','NSEMIDCAP','NSEIT','NSE100','NSE500','MIDCAP50']#,'NSEDEFTY','VIX']
+                        indexList = ['NSENIFTY','NIFTYJUNIOR','BANKNIFTY','NSEMIDCAP','NSEIT','NSE100','NSE500','MIDCAP50','VIX']#,'NSEDEFTY',]
                         #Create a dictionary mapping index to the index data URL
                         urls = {}
                         urls['NSENIFTY'] = 'http://nseindia.com/content/indices/histdata/S&P%20CNX%20NIFTYdate-date.csv'
                         urls['NIFTYJUNIOR'] = 'http://nseindia.com/content/indices/histdata/CNX%20NIFTY%20JUNIORdate-date.csv'
                         urls['NSE100'] = 'http://nseindia.com/content/indices/histdata/CNX%20100date-date.csv'
                         urls['NSE500'] = 'http://nseindia.com/content/indices/histdata/S&P%20CNX%20500date-date.csv'
-                        urls['MIDCAP50'] = 'http://nseindia.com/content/indices/histdata/NIFTY%20MIDCAP%205017-05-2011-18-05-2011.csv'
+                        urls['MIDCAP50'] = 'http://nseindia.com/content/indices/histdata/NIFTY%20MIDCAP%2050date-date.csv'
                         urls['NSEMIDCAP'] = 'http://nseindia.com/content/indices/histdata/CNX%20MIDCAPdate-date.csv' 
                         urls['BANKNIFTY'] = 'http://nseindia.com/content/indices/histdata/BANK%20NIFTYdate-date.csv' 
                         urls['NSEIT'] = 'http://nseindia.com/content/indices/histdata/CNX%20ITdate-date.csv'
-        
+                        urls['VIX'] = 'http://www.nseindia.com/content/vix/histdata/hist_india_vix_date_date.csv'
                         for index in indexList:
                             #Check whether we've been cancelled or not
                             if self.stopping:
                                 return
                             newurl = re.sub('date',date,urls[index])
                             self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Downloading "+index+ " index data...")
-                            urlpointer = urllib.urlretrieve(newurl,None)#,reporthook)
-                            
-                            #Read the downloaded csv file 
-                            f2 = open(urlpointer[0],'r')
-                            data = f2.readlines()
-                            f2.close()
-                            #delete the temp file created
-                            urllib.urlcleanup()
-                            
-                            abc = re.sub("\"",'',data[1]).split(',')
+                            res = br.open(newurl)
+                            data = res.read()
+                            abc = re.sub("\"",'',data).split(',')
                             a = []  
                             for i in abc[1:]:
                                 a.append(i.strip())
