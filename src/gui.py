@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main-window-gui.ui'
 #
-# Created: Thu May 26 18:40:04 2011
+# Created: Fri May 27 16:23:50 2011
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -157,8 +157,10 @@ class Ui_Hakija(object):
         self.actionAbout.setObjectName(_fromUtf8("actionAbout"))
         self.actionAbout_2 = QtGui.QAction(Hakija)
         self.actionAbout_2.setObjectName(_fromUtf8("actionAbout_2"))
+        self.actionaboutHakija = QtGui.QAction(Hakija)
+        self.actionaboutHakija.setObjectName(_fromUtf8("actionaboutHakija"))
         self.menuFile.addAction(self.actionExit)
-        self.menuHelp.addAction(self.actionAbout_2)
+        self.menuHelp.addAction(self.actionaboutHakija)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
 
@@ -189,6 +191,7 @@ class Ui_Hakija(object):
         self.actionExit.setText(QtGui.QApplication.translate("Hakija", "Exit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout.setText(QtGui.QApplication.translate("Hakija", "About", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout_2.setText(QtGui.QApplication.translate("Hakija", "About", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionaboutHakija.setText(QtGui.QApplication.translate("Hakija", "About Hakija", None, QtGui.QApplication.UnicodeUTF8))
 
 
 if __name__ == "__main__":

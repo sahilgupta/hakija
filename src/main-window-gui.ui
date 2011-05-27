@@ -312,7 +312,7 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout_2"/>
+    <addaction name="actionaboutHakija"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuHelp"/>
@@ -330,6 +330,11 @@
   <action name="actionAbout_2">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionaboutHakija">
+   <property name="text">
+    <string>About Hakija</string>
    </property>
   </action>
  </widget>

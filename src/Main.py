@@ -20,7 +20,7 @@ class Hakija(QtGui.QMainWindow):
         self.ui.startDate.setMaximumDate(QtCore.QDateTime.currentDateTime().date())
         #disable cancel button
         self.ui.cancelButton.setDisabled(True)
-
+        
         # Create thread object and connect its signals to methods on this object
         self.ponderous = DownloadData()
         self.connect(self.ponderous, QtCore.SIGNAL("updategui(PyQt_PyObject)"), self.appendUpdates)
@@ -28,7 +28,18 @@ class Hakija(QtGui.QMainWindow):
         
         QtCore.QObject.connect(self.ui.downloadButton, QtCore.SIGNAL("clicked()"), self.startDownload)
         QtCore.QObject.connect(self.ui.cancelButton, QtCore.SIGNAL("clicked()"), self.cancelDownload)
-        
+        QtCore.QObject.connect(self.ui.actionExit, QtCore.SIGNAL('triggered()'), sys.exit)
+        self.ui.actionExit.setShortcut('Ctrl+Q')
+
+        QtCore.QObject.connect(self.ui.actionaboutHakija, QtCore.SIGNAL('triggered()'), self.aboutHakija)
+
+    def aboutHakija(self):
+        text = """<html><head><title></title></head><body><p><span style="font-size: 22px;">
+        <strong>Hakija v0.80b</strong></span><br />Hakija lets you download End of Day data from NSE.</p>
+        <p>Author : Sahil Gupta</p><p><a href="http://www.github.com/sahilgupta/hakija" target="_blank">
+        Hakija Source Code<br /></a></p><p>&nbsp;</p></body></html>"""   
+        QtGui.QMessageBox.about (self, "About Hakija", text)
+
         # Method called asynchronously by other thread when progress should be updated
     def appendUpdates(self, update):
         print update
