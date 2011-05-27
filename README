@@ -1,4 +1,11 @@
-This is a NSE End of Day Data Downloader written in Python. It downloads daily EOD (End Of Day) data as well as historical data (past EOD data) for equity stocks and indices. The data is directly downloaded from the NSE servers.
-The downloaded data is in MetaStock format.
+This is a NSE End of Day Data Downloader written in Python. It downloads daily EOD (End Of Day) data as well as historical data (past EOD data) for NSE EQ series and also the main indices. 
 
-TODO: Functionality to download NSE Futures Data.
+The data is directly downloaded from the NSE servers and can be directly imported into MetaStock as ASCII format using MetaStock downloader.
+
+The files are created in the same directory as the program itself.
+
+
+Author:
+Sahil Gupta
+Github repo: http://www.github.com/sahilgupta/hakija
+For support issues or if you want contribute or donate for the continued development of Hakija, contact me: sahilgupt29@gmail.com
