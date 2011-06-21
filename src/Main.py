@@ -237,7 +237,7 @@ class DownloadData(QtCore.QThread):
                             for i in abc[1:]:
                                 a.append(i.strip())
                             try:
-                                f.write(index + "," + self.d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "," + a[5] + "\r\n")
+                                f.write(index + "," + self.d.strftime("%Y%m%d") + "," + a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "\r\n")
                             except IOError:
                                 self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Error in downloading " + index + " index data.Kindly retry later.")
             f.close()
