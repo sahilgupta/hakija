@@ -33,7 +33,7 @@ class Hakija(QtGui.QMainWindow):
 
     def aboutHakija(self):
         text = """<html><head><title></title></head><body><p><span style="font-size: 22px;">
-        <strong>Hakija v0.90b</strong></span><br />Hakija lets you download End of Day data from NSE.</p>
+        <strong>Hakija v1.0</strong></span><br />Hakija lets you download End of Day data from NSE.</p>
         <p>Author : Sahil Gupta</p><p><a href="http://www.github.com/sahilgupta/hakija" target="_blank">
         Hakija Source Code<br /></a></p><p>&nbsp;</p></body></html>"""
         QtGui.QMessageBox.about (self, "About Hakija", text)
@@ -145,7 +145,7 @@ class DownloadData(QtCore.QThread):
                 try:
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Checking for data existence...")
                     res = self.br.open("http://www.nseindia.com/archives/archives.jsp?date=" + date + "&fileType=eqbhav", timeout=50)
-
+                    
                 except urllib2.URLError as e:
                     if (str(e) == '<urlopen error [Errno -2] Name or service not known>'):
                         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: No internet connection found. Kindly check and retry.")
@@ -162,12 +162,18 @@ class DownloadData(QtCore.QThread):
                     if(self.checklist['BHAVCOPY']):
                             if(flag):
                                 self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Downloading bhavcopy...")
+                                
+                                class AppURLopener(urllib.FancyURLopener):
+                                    version = "Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0"
+
+                                urllib._urlopener = AppURLopener()
+                                
                                 urldata = urllib.urlretrieve(rlink, None)#,reporthook)
 
                                 if(self.stopping):
                                     return
                                 self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Bhavcopy succesfully fetched!")
-
+                                
                                 file = ZipFile(urldata[0], "r")
                                 data = file.read(file.namelist()[0])
                                 file.close()
@@ -247,7 +253,7 @@ class DownloadData(QtCore.QThread):
 thisdir= os.path.dirname(os.path.abspath(sys.argv[0]))
 datadir = "EOD_Data"
 curdir = os.path.join(thisdir,datadir)
-if not os.path.isdir(x):
+if not os.path.isdir(curdir):
         os.mkdir(curdir)
         os.chdir(curdir)
 #Start the program
