@@ -33,7 +33,7 @@ class Hakija(QtGui.QMainWindow):
 
     def aboutHakija(self):
         text = """<html><head><title></title></head><body><p><span style="font-size: 22px;">
-        <strong>Hakija v1.0</strong></span><br />Hakija lets you download End of Day data from NSE.</p>
+        <strong>Hakija v1.0.1</strong></span><br />Hakija lets you download End of Day data from NSE.</p>
         <p>Author : Sahil Gupta</p><p><a href="http://www.github.com/sahilgupta/hakija" target="_blank">
         Hakija Source Code<br /></a></p><p>&nbsp;</p></body></html>"""
         QtGui.QMessageBox.about (self, "About Hakija", text)
