@@ -144,7 +144,7 @@ class DownloadData(QtCore.QThread):
 
                 try:
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"), "Log Message: Checking for data existence...")
-                    res = self.br.open("http://www.nseindia.com/archives/archives.jsp?date=" + date + "&fileType=eqbhav", timeout=50)
+                    res = self.br.open("http://www.nseindia.com/ArchieveSearch?h_filetype=eqbhav&date="+date+"&section=EQ", timeout=10)
                     
                 except urllib2.URLError as e:
                     if (str(e) == '<urlopen error [Errno -2] Name or service not known>'):
