@@ -214,10 +214,10 @@ class DownloadData(QtCore.QThread):
             indexList = ['NSENIFTY', 'NIFTYJUNIOR', 'BANKNIFTY', 'NSEMIDCAP', 'NSEIT', 'NSE100', 'NSE500', 'MIDCAP50', 'VIX']#,'NSEDEFTY',]
             #Create a dictionary mapping index to the index data URL
             urls = {}
-            urls['NSENIFTY'] = 'http://nseindia.com/content/indices/histdata/S&P%20CNX%20NIFTYdate-date.csv'
+            urls['NSENIFTY'] = 'http://nseindia.com/content/indices/histdata/CNX%20NIFTYdate-date.csv'
             urls['NIFTYJUNIOR'] = 'http://nseindia.com/content/indices/histdata/CNX%20NIFTY%20JUNIORdate-date.csv'
             urls['NSE100'] = 'http://nseindia.com/content/indices/histdata/CNX%20100date-date.csv'
-            urls['NSE500'] = 'http://nseindia.com/content/indices/histdata/S&P%20CNX%20500date-date.csv'
+            urls['NSE500'] = 'http://nseindia.com/content/indices/histdata/CNX%20500date-date.csv'
             urls['MIDCAP50'] = 'http://nseindia.com/content/indices/histdata/NIFTY%20MIDCAP%2050date-date.csv'
             urls['NSEMIDCAP'] = 'http://nseindia.com/content/indices/histdata/CNX%20MIDCAPdate-date.csv'
             urls['BANKNIFTY'] = 'http://nseindia.com/content/indices/histdata/BANK%20NIFTYdate-date.csv'
