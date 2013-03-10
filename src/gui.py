@@ -14,11 +14,13 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
 
+
 class Ui_Hakija(object):
     def setupUi(self, Hakija):
         Hakija.setObjectName(_fromUtf8("Hakija"))
         Hakija.resize(650, 450)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
+                                       QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Hakija.sizePolicy().hasHeightForWidth())
@@ -27,20 +29,24 @@ class Ui_Hakija(object):
         Hakija.setAutoFillBackground(True)
         Hakija.setAnimated(True)
         self.centralwidget = QtGui.QWidget(Hakija)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
+                                       QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.centralwidget.sizePolicy().hasHeightForWidth())
         self.centralwidget.setSizePolicy(sizePolicy)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.scrollArea = QtGui.QScrollArea(self.centralwidget)
         self.scrollArea.setGeometry(QtCore.QRect(20, 150, 611, 241))
-        self.scrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAlwaysOff)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
         self.scrollAreaWidgetContents = QtGui.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 607, 237))
-        self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
+        self.scrollAreaWidgetContents.setObjectName(
+            _fromUtf8("scrollAreaWidgetContents"))
         self.verticalLayout = QtGui.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.progressUpdate = QtGui.QLabel(self.scrollAreaWidgetContents)
@@ -72,10 +78,12 @@ class Ui_Hakija(object):
         self.horizontalLayout.addWidget(self.endDate)
         self.downloadButton = QtGui.QPushButton(self.layoutWidget)
         self.downloadButton.setEnabled(True)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
+                                       QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.downloadButton.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.downloadButton.sizePolicy().hasHeightForWidth())
         self.downloadButton.setSizePolicy(sizePolicy)
         self.downloadButton.setAutoDefault(True)
         self.downloadButton.setDefault(True)
@@ -168,38 +176,86 @@ class Ui_Hakija(object):
         QtCore.QMetaObject.connectSlotsByName(Hakija)
 
     def retranslateUi(self, Hakija):
-        Hakija.setWindowTitle(QtGui.QApplication.translate("Hakija", "Hakija", None, QtGui.QApplication.UnicodeUTF8))
-        self.startDateLabel.setText(QtGui.QApplication.translate("Hakija", "  Start Date:", None, QtGui.QApplication.UnicodeUTF8))
-        self.startDate.setDisplayFormat(QtGui.QApplication.translate("Hakija", "dd/MM/yy", None, QtGui.QApplication.UnicodeUTF8))
-        self.endDateLabel.setText(QtGui.QApplication.translate("Hakija", "    End Date:", None, QtGui.QApplication.UnicodeUTF8))
-        self.endDate.setDisplayFormat(QtGui.QApplication.translate("Hakija", "dd/MM/yy", None, QtGui.QApplication.UnicodeUTF8))
-        self.downloadButton.setText(QtGui.QApplication.translate("Hakija", "Download", None, QtGui.QApplication.UnicodeUTF8))
-        self.cancelButton.setText(QtGui.QApplication.translate("Hakija", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("Hakija", "Download Options:", None, QtGui.QApplication.UnicodeUTF8))
-        self.bhavcopyCB.setText(QtGui.QApplication.translate("Hakija", "NSE Bhavcopy", None, QtGui.QApplication.UnicodeUTF8))
-        self.nseniftyCB.setText(QtGui.QApplication.translate("Hakija", "NSENIFTY", None, QtGui.QApplication.UnicodeUTF8))
-        self.niftyjuniorCB.setText(QtGui.QApplication.translate("Hakija", "NIFTY Junior", None, QtGui.QApplication.UnicodeUTF8))
-        self.nse100CB.setText(QtGui.QApplication.translate("Hakija", "NSE100", None, QtGui.QApplication.UnicodeUTF8))
-        self.bankniftyCB.setText(QtGui.QApplication.translate("Hakija", "BANKNIFTY", None, QtGui.QApplication.UnicodeUTF8))
-        self.nsemidcapCB.setText(QtGui.QApplication.translate("Hakija", "NSEMIDCAP", None, QtGui.QApplication.UnicodeUTF8))
-        self.nseitCB.setText(QtGui.QApplication.translate("Hakija", "NSEIT", None, QtGui.QApplication.UnicodeUTF8))
-        self.nse500CB.setText(QtGui.QApplication.translate("Hakija", "NSE500", None, QtGui.QApplication.UnicodeUTF8))
-        self.midcap50CB.setText(QtGui.QApplication.translate("Hakija", "MIDCAP50", None, QtGui.QApplication.UnicodeUTF8))
-        self.vixCB.setText(QtGui.QApplication.translate("Hakija", "VIX", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuFile.setTitle(QtGui.QApplication.translate("Hakija", "File", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuHelp.setTitle(QtGui.QApplication.translate("Hakija", "Help", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionExit.setText(QtGui.QApplication.translate("Hakija", "Exit", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionAbout.setText(QtGui.QApplication.translate("Hakija", "About", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionAbout_2.setText(QtGui.QApplication.translate("Hakija", "About", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionaboutHakija.setText(QtGui.QApplication.translate("Hakija", "About Hakija", None, QtGui.QApplication.UnicodeUTF8))
+        Hakija.setWindowTitle(
+            QtGui.QApplication.translate("Hakija", "Hakija", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.startDateLabel.setText(
+            QtGui.QApplication.translate("Hakija", "  Start Date:", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.startDate.setDisplayFormat(
+            QtGui.QApplication.translate("Hakija", "dd/MM/yy", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.endDateLabel.setText(
+            QtGui.QApplication.translate("Hakija", "    End Date:", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.endDate.setDisplayFormat(
+            QtGui.QApplication.translate("Hakija", "dd/MM/yy", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.downloadButton.setText(
+            QtGui.QApplication.translate("Hakija", "Download", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.cancelButton.setText(
+            QtGui.QApplication.translate("Hakija", "Cancel", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(
+            QtGui.QApplication.translate("Hakija", "Download Options:", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.bhavcopyCB.setText(
+            QtGui.QApplication.translate("Hakija", "NSE Bhavcopy", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.nseniftyCB.setText(
+            QtGui.QApplication.translate("Hakija", "NSENIFTY", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.niftyjuniorCB.setText(
+            QtGui.QApplication.translate("Hakija", "NIFTY Junior", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.nse100CB.setText(
+            QtGui.QApplication.translate("Hakija", "NSE100", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.bankniftyCB.setText(
+            QtGui.QApplication.translate("Hakija", "BANKNIFTY", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.nsemidcapCB.setText(
+            QtGui.QApplication.translate("Hakija", "NSEMIDCAP", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.nseitCB.setText(
+            QtGui.QApplication.translate("Hakija", "NSEIT", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.nse500CB.setText(
+            QtGui.QApplication.translate("Hakija", "NSE500", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.midcap50CB.setText(
+            QtGui.QApplication.translate("Hakija", "MIDCAP50", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.vixCB.setText(
+            QtGui.QApplication.translate("Hakija", "VIX", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.menuFile.setTitle(
+            QtGui.QApplication.translate("Hakija", "File", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.menuHelp.setTitle(
+            QtGui.QApplication.translate("Hakija", "Help", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.actionExit.setText(
+            QtGui.QApplication.translate("Hakija", "Exit", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.actionAbout.setText(
+            QtGui.QApplication.translate("Hakija", "About", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.actionAbout_2.setText(
+            QtGui.QApplication.translate("Hakija", "About", None,
+                                         QtGui.QApplication.UnicodeUTF8))
+        self.actionaboutHakija.setText(
+            QtGui.QApplication.translate("Hakija", "About Hakija", None,
+                                         QtGui.QApplication.UnicodeUTF8))
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtGui.QApplication(sys.argv)
     Hakija = QtGui.QMainWindow()
     ui = Ui_Hakija()
     ui.setupUi(Hakija)
     Hakija.show()
     sys.exit(app.exec_())
-
