@@ -6,11 +6,13 @@ import sys
 import urllib
 import urllib2
 import datetime
-from mechanize import Browser
 from zipfile import ZipFile
 
 from PyQt4 import QtCore, QtGui
 from gui import Ui_Hakija
+
+from mechanize import Browser
+
 
 class Hakija(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -24,7 +26,8 @@ class Hakija(QtGui.QMainWindow):
             QtCore.QDateTime.currentDateTime().date())
         self.ui.startDate.setMaximumDate(
             QtCore.QDateTime.currentDateTime().date())
-        #disable cancel button
+
+        # Disable cancel button
         self.ui.cancelButton.setDisabled(True)
 
         # Create thread object and connect its signals to methods on
@@ -79,9 +82,8 @@ class Hakija(QtGui.QMainWindow):
         """
         QtGui.QMessageBox.about(self, "About Hakija", text)
 
-        # Method called asynchronously by other thread when progress
-        # should be updated
-
+    # Method called asynchronously by other thread when progress should
+    # be updated
     def appendUpdates(self, update):
         print update
         self.ui.progressUpdate.setText(self.ui.progressUpdate.text() +
@@ -95,7 +97,7 @@ class Hakija(QtGui.QMainWindow):
         self.ui.startDate.setDisabled(True)
         self.ui.endDate.setDisabled(True)
 
-        #Disable checkbox checkability once the download has started
+        # Disable checkbox checkability once the download has started
         self.checkBoxDisability(True)
 
         startdate = str(self.ui.startDate.date().toString("dd-MM-yyyy"))
@@ -123,7 +125,6 @@ class Hakija(QtGui.QMainWindow):
         # cancelled
         self.checkBoxDisability(False)
 
-
     def checkBoxDisability(self, bool):
         self.ui.bhavcopyCB.setDisabled(bool)
         self.ui.nseniftyCB.setDisabled(bool)
@@ -141,7 +142,7 @@ class Hakija(QtGui.QMainWindow):
         self.ui.cancelButton.setDisabled(True)
         self.ui.startDate.setEnabled(True)
         self.ui.endDate.setEnabled(True)
-        #Re-enable checkbox checkability once the download is complete
+        # Re-enable checkbox checkability once the download is complete
         self.checkBoxDisability(False)
 
 
@@ -183,20 +184,20 @@ class DownloadData(QtCore.QThread):
         self.br.set_handle_equiv(True)
         self.br.set_handle_referer(True)
         self.br.set_handle_robots(False)
-        # Emulate a Mozilla Firefox 4.0 Browser to avoid the
-        # 403 Permission Denied Error
+        # Emulate a Mozilla Firefox 20.0 Browser to avoid the 403
+        # Permission Denied Error
         self.host = 'www.nseindia.com'
-        self.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:15.0) \
-                      Gecko/20100101 Firefox/19.0.2'
-        self.accept = 'text/plain,text/html,application/xml;q=0.9,*/*'
-        self.accept_lang = 'en-us,en;q=0.5'
+        self.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:20.0) \
+                           Gecko/20100101 Firefox/20.0'
+        self.accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+        self.accept_language = 'en-US,en;q=0.5'
         self.accept_charset = 'ISO-8859-1,utf-8;q=0.7,*;q=0.7'
         self.keep_alive = '115'
         self.connection = 'keep-alive'
         self.br.addheaders = [('Host', self.host),
                               ('User-Agent', self.user_agent),
                               ('Accept', self.accept),
-                              ('Accept-Language', self.accept_lang),
+                              ('Accept-Language', self.accept_language),
                               ('Accept-Charset', self.accept_charset),
                               ('Keep-Alive', self.keep_alive),
                               ('Connection', self.connection)]
