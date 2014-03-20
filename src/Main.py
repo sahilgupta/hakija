@@ -3,17 +3,15 @@
 import re
 import os
 import sys
-import urllib
 import urllib2
 import datetime
+from StringIO import StringIO
 from zipfile import ZipFile
+
 import requests
-
-
+from mechanize import Browser
 from PyQt4 import QtCore, QtGui
 from gui import Ui_Hakija
-
-from mechanize import Browser
 
 
 class Hakija(QtGui.QMainWindow):
@@ -66,7 +64,7 @@ class Hakija(QtGui.QMainWindow):
             <body>
                 <p>
                     <span style="font-size: 22px;">
-                        <strong>Hakija v1.0.1</strong>
+                        <strong>Hakija v1.0.2</strong>
                     </span>
                     <br />
                     Hakija lets you download End of Day data from NSE.
@@ -152,6 +150,19 @@ class DownloadData(QtCore.QThread):
     def __init__(self, parent=None):
         QtCore.QThread.__init__(self, parent)
         self.data_dict = {}
+        self.req_session = requests.Session()
+
+        # Emulate a Mozilla Firefox to avoid the 403
+        # Permission Denied Error
+        self.req_headers = {'Accept-Language': 'en-US,en;q=0.5',
+                            'Connection': 'keep-alive',
+                            'Keep-Alive': '115',
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                            'User-Agent': 'Mozilla/5.0 (Windows; Windows NT 6.1; Win64; x64; rv:28.0)'
+                                         ' Gecko/28.0 Firefox/28.0',
+                            'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7', 'Host': 'www.nseindia.com'
+                            }
+        self.req_session.headers.update(self.req_headers)
 
     # Call this to launch the thread
     def goNow(self, startDate, endDate, bhavcopycb, nseniftycb, niftyjuniorcb,
@@ -187,23 +198,7 @@ class DownloadData(QtCore.QThread):
         self.br.set_handle_equiv(True)
         self.br.set_handle_referer(True)
         self.br.set_handle_robots(False)
-        # Emulate a Mozilla Firefox 20.0 Browser to avoid the 403
-        # Permission Denied Error
-        self.host = 'www.nseindia.com'
-        self.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:20.0) \
-                           Gecko/20100101 Firefox/20.0'
-        self.accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-        self.accept_language = 'en-US,en;q=0.5'
-        self.accept_charset = 'ISO-8859-1,utf-8;q=0.7,*;q=0.7'
-        self.keep_alive = '115'
-        self.connection = 'keep-alive'
-        self.br.addheaders = [('Host', self.host),
-                              ('User-Agent', self.user_agent),
-                              ('Accept', self.accept),
-                              ('Accept-Language', self.accept_language),
-                              ('Accept-Charset', self.accept_charset),
-                              ('Keep-Alive', self.keep_alive),
-                              ('Connection', self.connection)]
+        self.br.addheaders = self.req_headers.items()
 
         startdate = datetime.datetime.strptime(self.startdate,
                                                "%d-%m-%Y").date()
@@ -246,26 +241,23 @@ class DownloadData(QtCore.QThread):
                         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
                                   "Log Message: Downloading bhavcopy...")
 
-                        class AppURLopener(urllib.FancyURLopener):
-                            version = self.user_agent
+                        response = self.req_session.get(rlink)
 
-                        urllib._urlopener = AppURLopener()
-
-                        urldata = urllib.urlretrieve(rlink,
-                                                     None,
-                                                     #reporthook
-                                                     )
+                        if response.status_code != 200:
+                            self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
+                                "Log Message: Error in downloading Bhavcopy. "
+                                "Recieved error code: %s. Kindly retry later."
+                                % response.status_code)
+                            self.stopTask()
 
                         if self.stopping:
                             return
+
                         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
                                   "Log Message: Bhavcopy succesfully fetched!")
 
-                        file = ZipFile(urldata[0], "r")
-                        data = file.read(file.namelist()[0])
-                        file.close()
-                        # delete the temp file created
-                        urllib.urlcleanup()
+                        with ZipFile(StringIO(response.content), "r") as zippedcontent:
+                          data = zippedcontent.read(zippedcontent.namelist()[0])
 
                         x = data.split("\n")
 
@@ -318,7 +310,7 @@ class DownloadData(QtCore.QThread):
         self.stopping = True
 
     def get_delivery_data(self, date):
-        req = requests.get('http://www.nseindia.com/archives/equities/mto/MTO_%s.DAT' % self.d.strftime("%d%m%Y"))
+        req = self.req_session.get('http://www.nseindia.com/archives/equities/mto/MTO_%s.DAT' % self.d.strftime("%d%m%Y"))
         return [z.strip().split(',')[2:] for z in req.content.split('\n')[4:-1]] # Remove the headers and the empty line at the end.
 
     def downloadindexdata(self, f):
@@ -356,14 +348,14 @@ class DownloadData(QtCore.QThread):
                           "Log Message: Downloading " + index +
                           " index data...")
                 try:
-                    res = self.br.open(newurl, timeout=50)
+                    res = self.req_session.get(newurl, timeout=10)
                 except:
                     print "EXCEPTION"
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
                               "Log Message: Error in downloading " + index +
                               " index data. Kindly retry later.")
                 else:
-                    data = res.read().split("\n")[1]
+                    data = res.content.split("\n")[1]
                     abc = re.sub("\"", '', data).split(",")
                     a = []
                     for i in abc[1:]:
