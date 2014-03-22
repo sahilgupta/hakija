@@ -64,7 +64,7 @@ class Hakija(QtGui.QMainWindow):
             <body>
                 <p>
                     <span style="font-size: 22px;">
-                        <strong>Hakija v1.0.2</strong>
+                        <strong>Hakija v1.0.3</strong>
                     </span>
                     <br />
                     Hakija lets you download End of Day data from NSE.
@@ -149,7 +149,6 @@ class Hakija(QtGui.QMainWindow):
 class DownloadData(QtCore.QThread):
     def __init__(self, parent=None):
         QtCore.QThread.__init__(self, parent)
-        self.data_dict = {}
         self.req_session = requests.Session()
 
         # Emulate a Mozilla Firefox to avoid the 403
@@ -261,31 +260,23 @@ class DownloadData(QtCore.QThread):
 
                         x = data.split("\n")
 
-                        for x1 in x[1:-1]:
-                            x1 = x1.split(",")
-                            # Extract and write only the EQ series
-                            # data in the file
-                            if x1[1] == "EQ":
-                                try:
-                                    self.data_dict[x1[0]] = x1[0] + "," + \
-                                             self.d.strftime("%Y%m%d") + \
-                                            "," + x1[2] + "," + x1[3] + \
-                                            "," + x1[4] + "," + x1[5] + ","
-                                except:
-                                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
-                                              "Log Message: Error in \
-                                              downloading Bhavcopy. \
-                                              Kindly retry later.")
-
-                        for row in self.get_delivery_data(self.d):
-                          if row[1] == "EQ":
-                            if self.data_dict.get(row[0]):
-                              print row
-                              self.data_dict[row[0]] += ','.join(row[2:])
-
-                        with open(self.nfile, "w") as f:
-                            for key in sorted(self.data_dict.iterkeys()):
-                                f.write(self.data_dict[key] + "\r\n")
+                        with open(self.nfile, "a") as f:
+                            for x1 in x[1:-1]:
+                                x1 = x1.split(",")
+                                # Extract and write only the EQ series
+                                # data in the file
+                                if x1[1] == "EQ":
+                                    try:
+                                        f.write(x1[0] + "," +
+                                                self.d.strftime("%Y%m%d") +
+                                                "," + x1[2] + "," + x1[3] +
+                                                "," + x1[4] + "," + x1[5] +
+                                                "," + x1[8] + "\r\n")
+                                    except:
+                                        self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
+                                                  "Log Message: Error in \
+                                                  downloading Bhavcopy. \
+                                                  Kindly retry later.")
                             if self.downloadindexdata(f):
                                 return
                     else:
@@ -308,10 +299,6 @@ class DownloadData(QtCore.QThread):
 
     def stopTask(self):
         self.stopping = True
-
-    def get_delivery_data(self, date):
-        req = self.req_session.get('http://www.nseindia.com/archives/equities/mto/MTO_%s.DAT' % self.d.strftime("%d%m%Y"))
-        return [z.strip().split(',')[2:] for z in req.content.split('\n')[4:-1]] # Remove the headers and the empty line at the end.
 
     def downloadindexdata(self, f):
         indexList = ['NSENIFTY',
