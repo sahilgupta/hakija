@@ -330,31 +330,27 @@ class DownloadData(QtCore.QThread):
             if self.stopping:
                 return 1
             if self.checklist[index]:
-                newurl = re.sub('date', self.date, urls[index])
-                self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
-                          "Log Message: Downloading " + index +
-                          " index data...")
                 try:
-                    res = self.req_session.get(newurl, timeout=10)
-                except:
-                    print "EXCEPTION"
+                    newurl = re.sub('date', self.date, urls[index])
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
-                              "Log Message: Error in downloading " + index +
-                              " index data. Kindly retry later.")
-                else:
+                              "Log Message: Downloading " + index +
+                              " index data...")
+                    res = self.req_session.get(newurl, timeout=10)
+                    if res.status_code != 200:
+                        raise Exception("Wrong status code from NSE. Recieved: %s"
+                                        % res.status_code)
                     data = res.content.split("\n")[1]
                     abc = re.sub("\"", '', data).split(",")
                     a = []
                     for i in abc[1:]:
                         a.append(i.strip())
-                    try:
-                        f.write(index + "," + self.d.strftime("%Y%m%d") +
-                                "," + a[0] + "," + a[1] + "," + a[2] + "," +
-                                a[3] + "," + a[4] + "\r\n")
-                    except IOError:
-                        self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
-                                  "Log Message: Error in downloading " +
-                                  index + " index data. Kindly retry later.")
+                    f.write(index + "," + self.d.strftime("%Y%m%d") +
+                            "," + a[0] + "," + a[1] + "," + a[2] + "," +
+                            a[3] + "," + a[4] + "\r\n")
+                except Exception as e:
+                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
+                              "Log Message: Error occured in downloading " +
+                              index + " index data.\n%s\nKindly retry later." % e)
         f.close()
         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
                   "Log Message: File successfully written.\n\n")
