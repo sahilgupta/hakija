@@ -314,14 +314,14 @@ class DownloadData(QtCore.QThread):
                      ]
         # Create a dictionary mapping index to the index data URL
         urls = {
-        'NSENIFTY': 'http://nseindia.com/content/indices/histdata/CNX%20NIFTYdate-date.csv',
-        'NIFTYJUNIOR': 'http://nseindia.com/content/indices/histdata/CNX%20NIFTY%20JUNIORdate-date.csv',
-        'NSE100': 'http://nseindia.com/content/indices/histdata/CNX%20100date-date.csv',
-        'NSE500': 'http://nseindia.com/content/indices/histdata/CNX%20500date-date.csv',
+        'NSENIFTY': 'http://nseindia.com/content/indices/histdata/NIFTY%2050date-date.csv',
+        'NIFTYJUNIOR': 'http://nseindia.com/content/indices/histdata/NIFTY%20NEXT%2050date-date.csv',
+        'NSE100': 'http://nseindia.com/content/indices/histdata/NIFTY%20100date-date.csv',
+        'NSE500': 'http://nseindia.com/content/indices/histdata/NIFTY%20500date-date.csv',
         'MIDCAP50': 'http://nseindia.com/content/indices/histdata/NIFTY%20MIDCAP%2050date-date.csv',
-        'NSEMIDCAP': 'http://nseindia.com/content/indices/histdata/CNX%20MIDCAPdate-date.csv',
-        'BANKNIFTY': 'http://nseindia.com/content/indices/histdata/BANK%20NIFTYdate-date.csv',
-        'NSEIT': 'http://nseindia.com/content/indices/histdata/CNX%20ITdate-date.csv',
+        'NSEMIDCAP': 'http://nseindia.com/content/indices/histdata/NIFTY%20MIDCAP%20100date-date.csv',
+        'BANKNIFTY': 'http://nseindia.com/content/indices/histdata/NIFTY%20BANKdate-date.csv',
+        'NSEIT': 'http://nseindia.com/content/indices/histdata/NIFTY%20ITdate-date.csv',
         'VIX': 'http://www.nseindia.com/content/vix/histdata/hist_india_vix_date_date.csv'
         }
 
