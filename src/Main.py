@@ -8,6 +8,7 @@ import datetime
 from StringIO import StringIO
 from zipfile import ZipFile
 
+from bs4 import BeautifulSoup
 import requests
 from mechanize import Browser
 from PyQt4 import QtCore, QtGui
@@ -64,7 +65,7 @@ class Hakija(QtGui.QMainWindow):
             <body>
                 <p>
                     <span style="font-size: 22px;">
-                        <strong>Hakija v1.0.3</strong>
+                        <strong>Hakija v1.0.5</strong>
                     </span>
                     <br />
                     Hakija lets you download End of Day data from NSE.
@@ -301,56 +302,62 @@ class DownloadData(QtCore.QThread):
         self.stopping = True
 
     def downloadindexdata(self, f):
-        indexList = ['NSENIFTY',
-                     'NIFTYJUNIOR',
-                     'BANKNIFTY',
-                     'NSEMIDCAP',
-                     'NSEIT',
-                     'NSE100',
-                     'NSE500',
-                     'MIDCAP50',
-                     'VIX',
-                     #'NSEDEFTY',
-                     ]
         # Create a dictionary mapping index to the index data URL
-        urls = {
-        'NSENIFTY': 'http://nseindia.com/content/indices/histdata/NIFTY%2050date-date.csv',
-        'NIFTYJUNIOR': 'http://nseindia.com/content/indices/histdata/NIFTY%20NEXT%2050date-date.csv',
-        'NSE100': 'http://nseindia.com/content/indices/histdata/NIFTY%20100date-date.csv',
-        'NSE500': 'http://nseindia.com/content/indices/histdata/NIFTY%20500date-date.csv',
-        'MIDCAP50': 'http://nseindia.com/content/indices/histdata/NIFTY%20MIDCAP%2050date-date.csv',
-        'NSEMIDCAP': 'http://nseindia.com/content/indices/histdata/NIFTY%20MIDCAP%20100date-date.csv',
-        'BANKNIFTY': 'http://nseindia.com/content/indices/histdata/NIFTY%20BANKdate-date.csv',
-        'NSEIT': 'http://nseindia.com/content/indices/histdata/NIFTY%20ITdate-date.csv',
-        'VIX': 'http://www.nseindia.com/content/vix/histdata/hist_india_vix_date_date.csv'
+        index_url = 'http://www.nseindia.com/products/dynaContent/equities/'\
+                    'indices/historicalindices.jsp?indexType={0}&fromDate={1}&toDate={1}'
+
+        index_map = {
+            'NSENIFTY': 'NIFTY%2050',
+            'NIFTYJUNIOR': 'NIFTY%20NEXT%2050',
+            'NSE100': 'NIFTY%20100',
+            'NSE500': 'NIFTY%20500',
+            'MIDCAP50': 'NIFTY%20MIDCAP%2050',
+            'NSEMIDCAP': 'NIFTY%20MIDCAP%20100',
+            'BANKNIFTY': 'NIFTY%20BANK',
+            'NSEIT': 'NIFTY%20IT',
+            'VIX': '',
         }
 
-        for index in indexList:
+        for index in index_map.iterkeys():
             # Check whether we've been cancelled or not
             if self.stopping:
                 return 1
             if self.checklist[index]:
-                newurl = re.sub('date', self.date, urls[index])
+                if index != 'VIX':
+                    newurl = index_url.format(index_map[index], self.date)
+                else:
+                    newurl = 'http://www.nseindia.com/content/vix/histdata/'\
+                             'hist_india_vix_{0}_{0}.csv'.format(self.d.strftime("%d-%b-%Y"))
+
                 self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
                           "Log Message: Downloading " + index +
                           " index data...")
                 try:
                     res = self.req_session.get(newurl, timeout=10)
                 except:
-                    print "EXCEPTION"
                     self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
                               "Log Message: Error in downloading " + index +
                               " index data. Kindly retry later.")
                 else:
-                    data = res.content.split("\n")[1]
-                    abc = re.sub("\"", '', data).split(",")
-                    a = []
-                    for i in abc[1:]:
-                        a.append(i.strip())
+                    if not res.ok:
+                        self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
+                                  "Log Message: Error in downloading " +
+                                  index + " index data. Kindly retry later.")
+
+                    if index == 'VIX':
+                        # For some weird reason, NSE exposes only VIX data
+                        # as a direct csv download
+                        data = [x.strip() for x in res.content.split(',')[9:13]]
+                        data.append('0')
+                    else:
+                        soup = BeautifulSoup(res.content)
+                        data = soup.find("div", {"id": "csvContentDiv"}).text
+                        data = [x.strip() for x in data.replace('"', '').split(',')[7:12]]
+
                     try:
                         f.write(index + "," + self.d.strftime("%Y%m%d") +
-                                "," + a[0] + "," + a[1] + "," + a[2] + "," +
-                                a[3] + "," + a[4] + "\r\n")
+                                "," + data[0] + "," + data[1] + "," + data[2] + "," +
+                                data[3] + "," + data[4] + "\r\n")
                     except IOError:
                         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
                                   "Log Message: Error in downloading " +
