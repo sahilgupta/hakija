@@ -332,18 +332,16 @@ class DownloadData(QtCore.QThread):
                 self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
                           "Log Message: Downloading " + index +
                           " index data...")
-                try:
-                    res = self.req_session.get(newurl, timeout=10)
-                except:
-                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
-                              "Log Message: Error in downloading " + index +
-                              " index data. Kindly retry later.")
-                else:
-                    if not res.ok:
-                        self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
-                                  "Log Message: Error in downloading " +
-                                  index + " index data. Kindly retry later.")
 
+                res = self.req_session.get(newurl, timeout=10)
+
+                if not res.ok:
+                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
+                              "Log Message: Error in downloading " +
+                              index + " index data. Kindly retry later.")
+                    continue
+
+                try:
                     if index == 'VIX':
                         # For some weird reason, NSE exposes only VIX data
                         # as a direct csv download
@@ -354,14 +352,13 @@ class DownloadData(QtCore.QThread):
                         data = soup.find("div", {"id": "csvContentDiv"}).text
                         data = [x.strip() for x in data.replace('"', '').split(',')[7:12]]
 
-                    try:
-                        f.write(index + "," + self.d.strftime("%Y%m%d") +
-                                "," + data[0] + "," + data[1] + "," + data[2] + "," +
-                                data[3] + "," + data[4] + "\r\n")
-                    except IOError:
-                        self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
-                                  "Log Message: Error in downloading " +
-                                  index + " index data. Kindly retry later.")
+                    f.write(index + "," + self.d.strftime("%Y%m%d") +
+                            "," + data[0] + "," + data[1] + "," + data[2] + "," +
+                            data[3] + "," + data[4] + "\r\n")
+                except AttributeError, IOError:
+                    self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
+                              "Log Message: Error in downloading " +
+                              index + " index data. Kindly retry later.")
         f.close()
         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
                   "Log Message: File successfully written.\n\n")
