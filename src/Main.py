@@ -312,7 +312,7 @@ class DownloadData(QtCore.QThread):
             'NSE100': 'NIFTY%20100',
             'NSE500': 'NIFTY%20500',
             'MIDCAP50': 'NIFTY%20MIDCAP%2050',
-            'NSEMIDCAP': 'NIFTY%20MIDCAP%20100',
+            'NSEMIDCAP': 'NIFTY%20MID100%20FREE',
             'BANKNIFTY': 'NIFTY%20BANK',
             'NSEIT': 'NIFTY%20IT',
             'VIX': '',
