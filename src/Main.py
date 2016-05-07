@@ -65,7 +65,7 @@ class Hakija(QtGui.QMainWindow):
             <body>
                 <p>
                     <span style="font-size: 22px;">
-                        <strong>Hakija v1.0.5</strong>
+                        <strong>Hakija v1.0.6</strong>
                     </span>
                     <br />
                     Hakija lets you download End of Day data from NSE.
