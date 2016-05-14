@@ -65,7 +65,7 @@ class Hakija(QtGui.QMainWindow):
             <body>
                 <p>
                     <span style="font-size: 22px;">
-                        <strong>Hakija v1.0.6</strong>
+                        <strong>Hakija v1.0.7</strong>
                     </span>
                     <br />
                     Hakija lets you download End of Day data from NSE.
@@ -241,14 +241,20 @@ class DownloadData(QtCore.QThread):
                         self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
                                   "Log Message: Downloading bhavcopy...")
 
-                        response = self.req_session.get(rlink)
-
-                        if response.status_code != 200:
+                        try:
+                            response = self.req_session.get(rlink, timeout=5,
+                                                            verify=False)
+                        except Exception, e:
                             self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
-                                "Log Message: Error in downloading Bhavcopy. "
-                                "Recieved error code: %s. Kindly retry later."
-                                % response.status_code)
-                            self.stopTask()
+                                "Log Message: Error in downloading Bhavcopy.\n"
+                                "%s" % e)
+                        else:
+                            if not response.ok:
+                                self.emit(QtCore.SIGNAL("updategui(PyQt_PyObject)"),
+                                    "Log Message: Error in downloading Bhavcopy. "
+                                    "Recieved error code: %s. Kindly retry later."
+                                    % response.status_code)
+                                self.stopTask()
 
                         if self.stopping:
                             return
